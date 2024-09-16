@@ -1,0 +1,96 @@
+import os.path
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()  # take environment variables from .env.
+
+path = './NPC1.txt'  # path to chat log file
+check_file = os.path.isfile(path)  # check if there is a chat log
+
+
+client = OpenAI()
+
+def send_message(user_input, conversation_history):
+    # Add the user's message to the conversation history
+    conversation_history += f"You: {user_input}\n"
+
+    # Get ChatGPT's response
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a the character described in this file in the world from this file"},
+            {"role": "user", "content": conversation_history}
+        ]
+    )
+
+    # Get the generated response from ChatGPT
+    chatgpt_response = completion.choices[0].message
+
+    # Add ChatGPT's response to the conversation history
+    conversation_history += f"ChatGPT: {chatgpt_response}\n"
+
+    return chatgpt_response, conversation_history
+
+def receive_message(conversation_history):
+    # Extract NPC's message from the conversation history
+    npc_message = conversation_history.split("ChatGPT: ")[-2]  # Assuming NPC's messages start with "ChatGPT:"
+
+    # Use NPC's message to gather information from the file or any other resource
+    # You can customize this part based on the structure of your file and how you want to use the information
+
+    # For example, reading information from the file
+    with open(path, 'r') as file:
+        file_content = file.read()
+
+    # Generating a response based on the file content
+    npc_response = f"I, the NPC, have read from the file: {file_content}"
+
+    return npc_response
+
+
+# Initialize conversation history
+conversation_history = ""
+
+while True:
+    # Get user input
+    user_input = input("You: ")
+
+    # Send the user's message and get ChatGPT's response
+    chatgpt_response, conversation_history = send_message(user_input, conversation_history)
+
+    # Print ChatGPT's response
+    print("NPC:", chatgpt_response)
+
+
+
+
+
+
+
+import os.path 
+
+path = './bob_chatlog.txt'  #path to chat log file
+check_file = os.path.isfile(path) #check if the there is a chat log
+npc_string = open("NPC1.txt")
+
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
+
+
+from openai import OpenAI
+client = OpenAI()
+
+completion = client.chat.completions.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {"role": "system", "content": "You are a character described in this file" + },
+    {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
+  ]
+)
+
+def send_message():
+    pass
+
+def recieve_message():
+    print(completion.choices[0].message)
